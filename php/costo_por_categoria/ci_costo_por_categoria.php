@@ -1,57 +1,15 @@
 <?php
-class ci_costo_por_categoria extends toba_ci
+class ci_costo_por_categoria extends abm_ci
 {
-	//---- Cuadro -----------------------------------------------------------------------
-
-	function conf__cuadro(toba_ei_cuadro $cuadro)
-	{
-		$cuadro->set_datos($this->dep('datos')->tabla('mocovi_costo_categoria')->get_listado());
-	}
-
-	function evt__cuadro__seleccion($datos)
-	{
-		$this->dep('datos')->cargar($datos);
-	}
-
-	//---- Formulario -------------------------------------------------------------------
-
-	function conf__formulario(toba_ei_formulario $form)
-	{
-		if ($this->dep('datos')->esta_cargada()) {
-			$form->set_datos($this->dep('datos')->tabla('mocovi_costo_categoria')->get());
-		}
-	}
-
-	function evt__formulario__alta($datos)
-	{
-		$this->dep('datos')->tabla('mocovi_costo_categoria')->set($datos);
-		$this->dep('datos')->sincronizar();
-		$this->resetear();
-	}
-
-	function evt__formulario__modificacion($datos)
-	{
-		$this->dep('datos')->tabla('mocovi_costo_categoria')->set($datos);
-		$this->dep('datos')->sincronizar();
-		$this->resetear();
-	}
-
-	function evt__formulario__baja()
-	{
-		$this->dep('datos')->eliminar_todo();
-		$this->resetear();
-	}
-
-	function evt__formulario__cancelar()
-	{
-		$this->resetear();
-	}
-
-	function resetear()
-	{
-		$this->dep('datos')->resetear();
-	}
-
+    protected $nombre_tabla="mocovi_costo_categoria";
+    
+    public function evt__formulario__alta($datos) {
+        $datos['costo_diario']=$datos['costo_basico']*13*1.4/365;
+        parent::evt__formulario__alta($datos);
+    }
+    
+    public function evt__formulario__modificacion($datos) {
+        $datos['costo_diario']=$datos['costo_basico']*13*1.4/365;
+        parent::evt__formulario__modificacion($datos);
+    }
 }
-
-?>

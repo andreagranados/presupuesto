@@ -1,8 +1,13 @@
 <?php
 class dt_mocovi_programa extends toba_datos_tabla
 {
-	function get_listado()
+	function get_listado($where=null)
 	{
+            if(!is_null($where)){
+                $where='Where '.$where;
+            }else{
+                $where='';
+            }
 		$sql = "SELECT
 			t_mp.id_programa,
                         t_mp.id_unidad,
@@ -14,6 +19,8 @@ class dt_mocovi_programa extends toba_datos_tabla
 		FROM
 			mocovi_programa as t_mp	LEFT OUTER JOIN unidad_acad as t_ua ON (t_mp.id_unidad = t_ua.sigla)
 			LEFT OUTER JOIN mocovi_tipo_programa as t_mtp ON (t_mp.id_tipo_programa = t_mtp.id_tipo_programa)
+                        
+                        $where
 		ORDER BY nombre";
 		return toba::db('presupuesto')->consultar($sql);
 	}
@@ -25,4 +32,3 @@ class dt_mocovi_programa extends toba_datos_tabla
 	}
 
 }
-?>
