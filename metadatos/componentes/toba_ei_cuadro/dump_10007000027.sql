@@ -293,9 +293,9 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'8', --orden
 	'Credito', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
-	'1', --estilo
+	'col-num-p1', --estilo
 	NULL, --ancho
-	'7', --formateo
+	'2', --formateo
 	NULL, --vinculo_indice
 	'0', --no_ordenar
 	NULL, --mostrar_xls

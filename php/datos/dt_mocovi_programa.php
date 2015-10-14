@@ -25,9 +25,18 @@ class dt_mocovi_programa extends toba_datos_tabla
 		return toba::db('presupuesto')->consultar($sql);
 	}
 
-	function get_descripciones()
+	function get_descripciones($id_unidad=NULL)
 	{
-		$sql = "SELECT id_programa, nombre FROM mocovi_programa ORDER BY nombre";
+            
+           if(!is_null($id_unidad)){
+                $where='Where id_unidad=\''.$id_unidad.'\'';
+            }else{
+                $where='';
+            }
+		$sql = "SELECT id_programa, nombre FROM mocovi_programa"
+                        . " $where "
+                        . "ORDER BY nombre";
+                //echo $sql;
 		return toba::db('presupuesto')->consultar($sql);
 	}
 
