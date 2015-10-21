@@ -1,5 +1,5 @@
 ------------------------------------------------------------
---[10007000039]--  Tipo Programa - Cuadro. 
+--[10007000039]--  Tipo Programa - Cuadro 
 ------------------------------------------------------------
 
 ------------------------------------------------------------
@@ -20,7 +20,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --subclase_archivo
 	NULL, --objeto_categoria_proyecto
 	NULL, --objeto_categoria
-	'Tipo Programa - Cuadro.', --nombre
+	'Tipo Programa - Cuadro', --nombre
 	'Listado de Grupos', --titulo
 	'0', --colapsable
 	NULL, --descripcion
@@ -119,8 +119,8 @@ INSERT INTO apex_objeto_cuadro (objeto_cuadro_proyecto, objeto_cuadro, titulo, s
 	NULL, --desplegable_activo
 	'1', --scroll
 	'250px', --scroll_alto
-	NULL, --cc_modo
-	NULL, --cc_modo_anidado_colap
+	't', --cc_modo
+	'0', --cc_modo_anidado_colap
 	NULL, --cc_modo_anidado_totcol
 	NULL  --cc_modo_anidado_totcua
 );
