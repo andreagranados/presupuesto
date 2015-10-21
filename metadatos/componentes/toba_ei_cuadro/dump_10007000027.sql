@@ -353,7 +353,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000034', --objeto_cuadro_col
 	'tipo_programa', --clave
 	'5', --orden
-	'Tipo Programa', --titulo
+	'Grupo', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho

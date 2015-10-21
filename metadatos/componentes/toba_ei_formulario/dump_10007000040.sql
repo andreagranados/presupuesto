@@ -22,7 +22,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --objeto_categoria
 	'Tipo Programa - Form', --nombre
 	NULL, --titulo
-	NULL, --colapsable
+	'0', --colapsable
 	NULL, --descripcion
 	'presupuesto', --fuente_datos_proyecto
 	'presupuesto', --fuente_datos
@@ -37,7 +37,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --parametro_f
 	NULL, --usuario
 	'2015-09-29 11:21:53', --creacion
-	NULL  --posicion_botonera
+	'abajo'  --posicion_botonera
 );
 --- FIN Grupo de desarrollo 10007
 
@@ -201,8 +201,8 @@ INSERT INTO apex_objeto_ut_formulario (objeto_ut_formulario_proyecto, objeto_ut_
 	NULL, --clase
 	NULL, --auto_reset
 	NULL, --ancho
-	NULL, --ancho_etiqueta
-	NULL, --expandir_descripcion
+	'150px', --ancho_etiqueta
+	'0', --expandir_descripcion
 	NULL, --campo_bl
 	NULL, --scroll
 	NULL, --filas
@@ -219,8 +219,8 @@ INSERT INTO apex_objeto_ut_formulario (objeto_ut_formulario_proyecto, objeto_ut_
 	NULL, --ev_seleccion
 	NULL, --alto
 	NULL, --analisis_cambios
-	NULL, --no_imprimir_efs_sin_estado
-	NULL, --resaltar_efs_con_estado
+	'0', --no_imprimir_efs_sin_estado
+	'0', --resaltar_efs_con_estado
 	NULL, --template
 	NULL  --template_impresion
 );
@@ -238,8 +238,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'id_tipo_programa', --columnas
 	'1', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'0', --orden
+	'0', --oculto_relaja_obligatorio
+	'1', --orden
 	'Id Tipo Programa', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -318,9 +318,9 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable', --elemento_formulario
 	'tipo', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'1', --orden
-	'Tipo', --etiqueta
+	'0', --oculto_relaja_obligatorio
+	'2', --orden
+	'Grupo', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
 	NULL, --colapsado

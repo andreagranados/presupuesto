@@ -193,7 +193,7 @@ INSERT INTO apex_objeto_ei_filtro_col (objeto_ei_filtro_col, objeto_ei_filtro, o
 	'opciones', --tipo
 	'id_tipo_programa', --nombre
 	't_mp.id_tipo_programa', --expresion
-	'Tipo Programa', --etiqueta
+	'Grupo', --etiqueta
 	NULL, --descripcion
 	'0', --obligatorio
 	'0', --inicial

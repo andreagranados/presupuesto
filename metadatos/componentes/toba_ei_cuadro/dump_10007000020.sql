@@ -21,7 +21,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --objeto_categoria_proyecto
 	NULL, --objeto_categoria
 	'ABM Programa - Cuadro.', --nombre
-	'Listado de Programas', --titulo
+	'Listado de Programas / Convenios', --titulo
 	'0', --colapsable
 	NULL, --descripcion
 	NULL, --fuente_datos_proyecto
@@ -167,7 +167,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000017', --objeto_cuadro_col
 	'id_tipo_programa_nombre', --clave
 	'2', --orden
-	'Tipo Programa', --titulo
+	'Grupo', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho
@@ -198,7 +198,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000018', --objeto_cuadro_col
 	'nombre', --clave
 	'3', --orden
-	'Nombre', --titulo
+	'Nombre Programa', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho

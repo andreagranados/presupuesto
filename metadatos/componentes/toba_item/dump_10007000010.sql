@@ -1,5 +1,5 @@
 ------------------------------------------------------------
---[10007000010]--  ABM Tipo Programa 
+--[10007000010]--  ABM Grupos 
 ------------------------------------------------------------
 
 ------------------------------------------------------------
@@ -23,7 +23,7 @@ INSERT INTO apex_item (item_id, proyecto, item, padre_id, padre_proyecto, padre,
 	NULL, --actividad_buffer
 	NULL, --actividad_patron_proyecto
 	NULL, --actividad_patron
-	'ABM Tipo Programa', --nombre
+	'ABM Grupos', --nombre
 	NULL, --descripcion
 	'10007000002', --punto_montaje
 	NULL, --actividad_accion
