@@ -32,6 +32,27 @@ $where
 		return toba::db('presupuesto')->consultar($sql);
 	}
 
-}
 
-?>
+
+
+    static function get_credito_periodo_actual() {
+        $sql = "select c.id_unidad as unidad,c.id_escalafon as escalafon,pp.area,pp.sub_area,pp.nombre, 
+            sum(credito) as credito
+            from mocovi_credito c
+                
+                inner join mocovi_periodo_presupuestario p on c.id_periodo=p.id_periodo and actual is true
+                inner join mocovi_programa pp on c.id_programa=pp.id_programa
+                group by c.id_unidad,c.id_escalafon,pp.area,pp.sub_area,pp.nombre
+               ";
+
+        $credito_unidad = toba::db()->consultar($sql);
+
+        $credito = array();
+        /* costodiacategoria= (basico + zona)*13/360 */
+        foreach ($credito_unidad as $row) {
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['credito'] = $row['credito'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['nombre'] = $row['nombre'];
+        }
+        return $credito;
+    }
+}

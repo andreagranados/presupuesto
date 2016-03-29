@@ -1,6 +1,22 @@
 <?php
 class dt_mocovi_costo_categoria extends toba_datos_tabla
 {
+     static function get_costo_categorias_periodo_actual() {
+        $sql = "select cc.codigo_siu,costo_basico  from 
+                mocovi_costo_categoria cc 
+                inner join mocovi_periodo_presupuestario p 
+                on cc.id_periodo=p.id_periodo and actual is true
+                ";
+
+        $costos_categoria = toba::db()->consultar($sql);
+
+        $costos = array();
+         /*costodiacategoria= (basico + zona)*13/360*/
+        foreach ($costos_categoria as $costo) {
+            $costos[$costo['codigo_siu']] = $costo['costo_basico']*1.4*13/360;
+        }
+        return $costos;
+    }
 	function get_listado($where=null)
 	{
             if(!is_null($where)){
