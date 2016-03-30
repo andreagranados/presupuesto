@@ -224,9 +224,11 @@ on dias.nro_cargo=licencia.nro_cargo $where
 
         select dias.nro_legaj, dias.nro_cargo,dias.codc_carac, dias.codc_categ, dias.codc_uacad, dias.tipo_escal,
                 dias.alta , dias.baja, dias.fec_alta, dias.fec_baja,
-                baja-alta+1 as dias_a_trabajar,
+                baja-alta+1-(baja-alta+1)%30 as dias_a_trabajar,
                 CASE WHEN licencia.dias_lic IS NULL THEN 0 ELSE licencia.dias_lic END as dias_licencia,
-                CASE WHEN licencia.dias_lic IS NULL THEN baja-alta+1 ELSE baja-alta+1-licencia.dias_lic END as dias_a_trabajar_total 
+                CASE WHEN licencia.dias_lic IS NULL THEN baja-alta+1-(baja-alta+1)%30
+                     WHEN licencia.dias_lic>baja-alta+1-(baja-alta+1)%30 THEN 0
+                        ELSE baja-alta+1-(baja-alta+1)%30-licencia.dias_lic END as dias_a_trabajar_total 
         from
 
         --dias a trabajar
