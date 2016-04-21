@@ -195,8 +195,8 @@ on dias.nro_cargo=licencia.nro_cargo $where
 
                 $costodia = $costos[$fila['codc_categ']];
                 $fila['pagado'] = $fila['dias_trabajados_total'] * $costodia;
-                $fila['a_pagar'] = $fila['dias_a_trabajar_total'] * $costodia ;
-                $fila['ejecutado'] = $fila['dias_total'] * $costodia ;
+                $fila['a_pagar'] = $fila['dias_a_trabajar_total'] * $costodia;
+                $fila['ejecutado'] = $fila['dias_total'] * $costodia;
                 $fila['factor'] = $costodia;
             } else {
                 $fila['ejecutado'] = 0;
@@ -277,7 +277,9 @@ on dias.nro_cargo=licencia.nro_cargo $where
      * @return strig 
      */
     protected function dias_trabajados_total($param) {
-        $sql = "select t.nro_legaj,t.nro_cargo,c.fec_alta,c.fec_baja,c.codc_categ,c.codc_uacad ,b.tipo_escal,
+        $sql = "select  t.nro_legaj,t.nro_cargo,
+            --t.codn_area,t.codn_subar,
+            c.fec_alta,c.fec_baja,c.codc_categ,c.codc_uacad ,b.tipo_escal,
             t.dias_trabajados as dias_trabajados,
             t.dias_retro as dias_retro,
             t.dias_trabajados+t.dias_retro as dias_trabajados_total,
@@ -285,52 +287,26 @@ on dias.nro_cargo=licencia.nro_cargo $where
             t.aportes as aportes,
             t.bruto+t.aportes as costo
         from
-            (select
-            CASE WHEN trabajados.nro_legaj IS NOT NULL THEN trabajados.nro_legaj
-            WHEN bruto.nro_legaj IS NOT NULL THEN bruto.nro_legaj
-            WHEN aportes.nro_legaj IS NOT NULL THEN aportes.nro_legaj
-            ELSE retro.nro_legaj END AS nro_legaj,
-            
-            CASE WHEN trabajados.nro_cargo IS NOT NULL THEN trabajados.nro_cargo 
-             WHEN bruto.nro_cargo IS NOT NULL THEN bruto.nro_cargo
-            WHEN aportes.nro_cargo IS NOT NULL THEN aportes.nro_cargo
-            ELSE retro.nro_cargo END AS nro_cargo,
-
-            
-CASE WHEN trabajados.dias_trab is Null THEN 0 ELSE trabajados.dias_trab END AS dias_trabajados,
-            CASE WHEN retro.dias_retro is Null THEN 0 ELSE retro.dias_retro END AS dias_retro,
-            CASE WHEN bruto.bruto is Null THEN 0 ELSE bruto.bruto END AS bruto,
+            (select trabajados.nro_legaj,trabajados.nro_cargo,
+            trabajados.dias_trab AS dias_trabajados,
+            case when dias_retro is Null THEN 0 ELSE dias_retro END AS dias_retro,
+            CASE WHEN bruto is Null THEN 0 ELSE bruto END AS bruto,
             CASE WHEN aportes.aportes is Null THEN 0 ELSE aportes.aportes END AS aportes
 
-            from
-                        (select a.nro_legaj,a.nro_cargo, sum(a.nov1_conce) as dias_trab
-                        from mapuche.dh21h a, mapuche.dh22 b
+            from       
+                        (select a.nro_legaj,a.nro_cargo,
+                        sum(a.dias_trab) as dias_trab,
+                        sum(a.dias_retro) as dias_retro,
+                        sum(a.tot_haber) as bruto  --ver desglosar bruto de aguinaldo
+                        from mapuche.dhr2 a, mapuche.dh22 b
                         where a.nro_liqui=b.nro_liqui
-                        --and ((b.per_liano=2014 and b.per_limes>=2) or (b.per_liano=2015 and b.per_limes=1))
                         and a.nro_liqui>={$param['id_liqui_ini']}
                         and a.nro_liqui<={$param['id_liqui_fin']}
                         and a.nro_liqui<>{$param['id_liqui_1sac']} --sin contar dias de aguinaldo
                         and a.nro_liqui<>{$param['id_liqui_2sac']}
-                        and codn_conce=-51
-                        and ano_retro = 0
-                        and mes_retro = 0
+                        
                         group by a.nro_legaj,a.nro_cargo
                         )trabajados
-                        
-full outer join (select a.nro_legaj,a.nro_cargo, sum(a.impp_conce) as bruto
-                        from mapuche.dh21h a --, mapuche.dh22 b
-                        where 
-                        --a.nro_liqui=b.nro_liqui
-                        --and ((b.per_liano=2014 and b.per_limes>=2) or (b.per_liano=2015 and b.per_limes=1))
-                        --and 
-                        a.nro_liqui>={$param['id_liqui_ini']}
-                        and a.nro_liqui<={$param['id_liqui_fin']}
-                        and codn_conce=-51
-                        --and ano_retro = 0
-                        --and mes_retro = 0
-                        group by a.nro_legaj,a.nro_cargo
-                        )bruto
-                        on trabajados.nro_cargo=bruto.nro_cargo
 
 full outer join (select a.nro_legaj,a.nro_cargo, sum(a.impp_conce ) as aportes
                         from mapuche.dh21h a,  mapuche.dh12 c
@@ -345,25 +321,8 @@ full outer join (select a.nro_legaj,a.nro_cargo, sum(a.impp_conce ) as aportes
                         and c.tipo_conce='A'
                         group by a.nro_legaj,a.nro_cargo
                         )aportes
-                        on trabajados.nro_cargo=aportes.nro_cargo
-
-full outer join
-
-            (select a.nro_legaj,a.nro_cargo, sum(a.nov1_conce) as dias_retro
-            from mapuche.dh21h a
-            , mapuche.dh22 b
-            where 
-            a.nro_liqui=b.nro_liqui
-            --and ((b.per_liano=2014 and b.per_limes>=2) or (b.per_liano=2014 and b.per_limes=10))
-            and a.nro_liqui>={$param['id_liqui_ini']}
-            and a.nro_liqui<={$param['id_liqui_fin']}
-            and b.nro_liqui<>{$param['id_liqui_1sac']} --sin contar dias de aguinaldo
-            and codn_conce=-51
-            and ano_retro <> 0
-            and mes_retro <>0
-            group by a.nro_legaj,a.nro_cargo
-            )retro
-on trabajados.nro_cargo=retro.nro_cargo) t 
+                        on trabajados.nro_cargo=aportes.nro_cargo 
+) t 
 
 inner join dh03 c on t.nro_cargo=c.nro_cargo
 
@@ -395,11 +354,12 @@ round(CAST (tot.dias_licencia*porc_ipres/100 AS numeric),2) AS dias_licencia,
 round(CAST (tot.dias_a_trabajar_total *porc_ipres/100 AS numeric),2) AS dias_a_trabajar_total
 
 
-,codn_fuent,codn_area,codn_subar,porc_ipres   from (            
-select
+,dh24.codn_fuent,dh24.codn_area,dh24.codn_subar,porc_ipres from (            
+select 
 
 CASE WHEN a_trabajar.nro_legaj is Null THEN ya_trabajados.nro_legaj ELSE a_trabajar.nro_legaj END AS nro_legaj,
 CASE WHEN a_trabajar.nro_cargo is Null THEN ya_trabajados.nro_cargo ELSE a_trabajar.nro_cargo END AS nro_cargo,
+--ya_trabajados.codn_area,ya_trabajados.codn_subar,
 CASE WHEN a_trabajar.fec_alta is Null THEN ya_trabajados.fec_alta ELSE a_trabajar.fec_alta END AS fec_alta,
 CASE WHEN a_trabajar.fec_baja is Null THEN ya_trabajados.fec_baja ELSE a_trabajar.fec_baja END AS fec_baja,
 CASE WHEN a_trabajar.codc_uacad is Null THEN ya_trabajados.codc_uacad ELSE a_trabajar.codc_uacad END AS codc_uacad,
@@ -424,7 +384,9 @@ from
 
 on a_trabajar.nro_cargo=ya_trabajados.nro_cargo
 ) tot
-inner join dh24 on tot.nro_cargo=dh24.nro_cargo";
+inner join dh24 on tot.nro_cargo=dh24.nro_cargo 
+--and (tot.codn_area=dh24.codn_area and tot.codn_subar=dh24.codn_subar or tot.codn_area is Null)
+";
         return $sql;
     }
 
@@ -535,15 +497,35 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo";
         }
         if ($codigo_unidad != '') {
             if (isset($credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
-                 $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
-                        $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
-                    } else {
-                        $fila_salida['credito'] = 0;
-                        $fila_salida['programa'] = 'Otros';
-                    }
+                $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
+                $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+            } else {
+                $fila_salida['credito'] = 0;
+                $fila_salida['programa'] = 'Otros';
+            }
             $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
             $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
         }
+/*
+        foreach ($credito_unidad as $codigo_unidad => $filaunidad) {
+            foreach ($filaunidad as $codigo_escalafon => $filaescalafon) {
+                foreach ($filaescalafon as $codigo_area => $filaarea) {
+                    foreach ($filaarea as $codigo_sub_area => $value) {
+                        if (!isset($salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area])) {
+                            $fila_salida = [];
+                            $fila_salida['codc_uacad']=$codigo_unidad;
+                            $fila_salida['credito'] = $value['credito'];
+                            $fila_salida['programa'] = $value['nombre'];
+                            $fila_salida['ejecutado'] =0;
+                            $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+                            $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
+                            //darlo de alta
+                        }
+                    }
+                }
+            }
+        }
+*/
         return $salida;
     }
 
@@ -553,33 +535,33 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo";
 
     function get_credito_escalafon_agrupado($where) {
         $salida = $this->get_credito_escalafon($where);
-       /* if (isset($salida['SESO'])) {
-            $seso = $salida['SESO'];
-            //if(isset($salida['RECT']))    $rect = $salida['RECT'];
-            if ($seso['tipo_escal'] == 'D' || $seso['tipo_escal'] == 'N') {
-                $salida['FADE']['ejecutado'] += $seso['ejecutado'];
-                $salida['FADE']['pagado'] += $seso['pagado'];
-                $salida['FADE']['a_pagar'] += $seso['a_pagar'];
-                $salida['FADE']['cantidad'] += $seso['cantidad'];
-                $salida['FADE']['resultado'] += $seso['resultado'];
-                $salida['FADE']['bruto'] += $seso['bruto'];
-                $salida['FADE']['aportes'] += $seso['aportes'];
-                $salida['FADE']['costo'] += $seso['costo'];
-                $salida['FADE']['dias_total'] += $seso['dias_total'];
-                unset($salida['SESO']);
+        /* if (isset($salida['SESO'])) {
+          $seso = $salida['SESO'];
+          //if(isset($salida['RECT']))    $rect = $salida['RECT'];
+          if ($seso['tipo_escal'] == 'D' || $seso['tipo_escal'] == 'N') {
+          $salida['FADE']['ejecutado'] += $seso['ejecutado'];
+          $salida['FADE']['pagado'] += $seso['pagado'];
+          $salida['FADE']['a_pagar'] += $seso['a_pagar'];
+          $salida['FADE']['cantidad'] += $seso['cantidad'];
+          $salida['FADE']['resultado'] += $seso['resultado'];
+          $salida['FADE']['bruto'] += $seso['bruto'];
+          $salida['FADE']['aportes'] += $seso['aportes'];
+          $salida['FADE']['costo'] += $seso['costo'];
+          $salida['FADE']['dias_total'] += $seso['dias_total'];
+          unset($salida['SESO']);
 
-//            $salida['FADE']['ejecutado'] += $rect['ejecutado'];
-//            $salida['FADE']['pagado'] += $rect['pagado'];
-//            $salida['FADE']['a_pagar'] += $rect['a_pagar'];
-//            $salida['FADE']['cantidad'] += $rect['cantidad'];
-//            $salida['FADE']['resultado'] += $rect['resultado'];
-//            $salida['FADE']['bruto'] += $rect['bruto'];
-//            $salida['FADE']['aportes'] += $rect['aportes'];
-//            $salida['FADE']['costo'] += $rect['costo'];
-//            $salida['FADE']['dias_total'] += $rect['dias_total'];
-//            unset($salida['RECT']);
-            }
-        }*/
+          //            $salida['FADE']['ejecutado'] += $rect['ejecutado'];
+          //            $salida['FADE']['pagado'] += $rect['pagado'];
+          //            $salida['FADE']['a_pagar'] += $rect['a_pagar'];
+          //            $salida['FADE']['cantidad'] += $rect['cantidad'];
+          //            $salida['FADE']['resultado'] += $rect['resultado'];
+          //            $salida['FADE']['bruto'] += $rect['bruto'];
+          //            $salida['FADE']['aportes'] += $rect['aportes'];
+          //            $salida['FADE']['costo'] += $rect['costo'];
+          //            $salida['FADE']['dias_total'] += $rect['dias_total'];
+          //            unset($salida['RECT']);
+          }
+          } */
         return $salida;
     }
 
