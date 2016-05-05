@@ -27,6 +27,7 @@ class dt_mocovi_costo_categoria extends toba_datos_tabla
 		$sql = "SELECT
 			t_mcc.id_costo_categoria,
 			t_mpp.anio as id_periodo_nombre,
+                        t_cs.codigo_siu as codigo_siu,
 			t_cs.descripcion as codigo_siu_nombre,
 			t_mcc.costo_basico,
 			t_mcc.costo_diario
