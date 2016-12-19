@@ -27,7 +27,7 @@ class consultas_mapuche {
                         periodo pp
                 where
                 p.codigo_categoria_siu=c.codigo_siu and c.id_categoria=cc.id_categoria and cc.id_periodo=3
-                and  cc.id_periodo=pp.id_periodo and pp.actual is true and
+                and  cc.id_periodo=pp.id_periodo and pp.activo_para_carga_presupuestando is true and
                 p.codigo_unidad=u.codigo and u.id_unidad=cu.id_unidad and cu.id_periodo=pp.id_periodo $where
 group by codigo_unidad, codigo_escalafon, 
        codigo_categoria_siu, cc.costo";
@@ -123,7 +123,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
 
     protected function get_parametros_periodo() {
         $sql = 'select * from mocovi_periodo_presupuestario
-                where actual is true';
+                where activo_para_carga_presupuestando is true';
         $datos_mapuche = toba::db()->consultar($sql);
         $param = array();
         foreach ($datos_mapuche as $fila) {
