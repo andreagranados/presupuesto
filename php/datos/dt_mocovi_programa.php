@@ -18,6 +18,9 @@ class dt_mocovi_programa extends toba_datos_tabla
 			t_mp.sub_area,
                         t_mp.sub_sub_area,
                         t_mp.fuente,
+                        t_mp.programa,
+                        t_mp.sub_programa,
+                        t_mp.actividad,
                         t_mp.imputacion
 		FROM
 			mocovi_programa as t_mp	LEFT OUTER JOIN unidad_acad as t_ua ON (t_mp.id_unidad = t_ua.sigla)
