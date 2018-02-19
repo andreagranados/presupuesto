@@ -594,9 +594,9 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
     
         public function get_credito_legajo($where) {
         /* se obtienen los dias agrupados por categoria */
-        $dias_categoria = $this->get_dias_cargo($where);
+        $dias_cargo = $this->get_dias_cargo($where);
         /* se obtiene el crédito por unidad, escalafon, programa (area,subarea) */
-        $credito_unidad = dt_mocovi_credito::get_credito_designaciones_periodo_actual();
+        $credito_unidad = dt_mocovi_credito::get_credito_designaciones_periodo_actual($where);
         $salida = array();
         $codigo_unidad = '';
         $codigo_escalafon = '';
@@ -604,7 +604,7 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
         $codigo_sub_area = '';
         $nro_legaj= '';
         //print_r($credito_unidad);        print_r($dias_categoria);exit;
-        foreach ($dias_categoria as $fila) {
+        foreach ($dias_cargo as $fila) {
            /* if($fila['codc_uacad']=='SESO') {
                 $fila['codc_uacad']='FADE';
                 $codigo_unidad='FADE';
@@ -618,19 +618,17 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
             if ($nro_legaj != $fila['nro_legaj'] ||$codigo_unidad != $fila['codc_uacad'] || $codigo_escalafon != $fila['tipo_escal'] || $codigo_area != $fila['codn_area'] || $codigo_sub_area != $fila['codn_subar']) {
                 if ($nro_legaj != '') {
                     if (isset($credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
-                        $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
-                        $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+                        //$fila_salida['credito'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
                         $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
                         
                         
                     } else {
-                        $fila_salida['credito'] = 0;
-                        $fila_salida['programa'] = 'Otros';
+                        //$fila_salida['credito'] = 0;
                         $fila_salida['designaciones'] = 0;
                         
                         
                     }
-                    $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+                    //$fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
                     $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'];
                     $salida[$codigo_unidad . $nro_legaj.$codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
                 }
@@ -646,7 +644,7 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
                 $fila_salida['ejecutado'] += $fila['ejecutado'];
                 $fila_salida['pagado'] += $fila['pagado'];
                 $fila_salida['a_pagar'] += $fila['a_pagar'];
-                $fila_salida['cantidad'] += $fila['cantidad'];
+                //$fila_salida['cantidad']++;
                 $fila_salida['bruto'] += $fila['bruto'];
                 $fila_salida['aportes'] += $fila['aportes'];
                 $fila_salida['costo'] += $fila['costo'];
@@ -654,16 +652,16 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
             }
         }
         if ($codigo_unidad != '') {
-            if (isset($credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
-                $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
-                $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
-                $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
+            if (isset($credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
+               
+              
+                $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
             } else {
-                $fila_salida['credito'] = 0;
-                $fila_salida['programa'] = 'Otros';
+                //$fila_salida['credito'] = 0;
+                
                 $fila_salida['designaciones'] = 0;
             }
-            $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+            //$fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
             $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'] ;
             $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
         }
@@ -686,7 +684,7 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
                 }
             }
         }
-*/
+*/ //print_r($salida);exit;
         return $salida;
     }
     

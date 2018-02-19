@@ -58,26 +58,15 @@ $where
         return $credito;
     }
     
-    static function get_credito_designaciones_periodo_actual() {
+    static function get_credito_designaciones_periodo_actual($where=null) {
         $sql = "
 
  --toma periodo 2018
-select unidad,escalafon, a.area, a.sub_area, nombre, credito, designaciones
-from
-(select c.id_unidad as unidad,c.id_escalafon as escalafon,pp.area,pp.sub_area,pp.nombre, 
-            sum(credito) as credito
-            from mocovi_credito c
-                
-                inner join mocovi_periodo_presupuestario p on c.id_periodo=p.id_periodo and actual is true
-                inner join mocovi_programa pp on c.id_programa=pp.id_programa
-                
-                group by c.id_unidad,c.id_escalafon,pp.area,pp.sub_area,pp.nombre) a
-                 inner join
-(
-select uni_acad, area, sub_area, sum(costo) as designaciones
+
+select uni_acad as unidad, legajo,escalafon,area, sub_area,  sum(costo) as designaciones, count(nro_cargo) as cantidad
 from (
 
- select distinct uni_acad,area,sub_area,b.id_designacion,docente_nombre,legajo,nro_cargo,anio_acad, b.desde, b.hasta,cat_mapuche, cat_mapuche_nombre,cat_estat,dedic,carac,id_departamento, id_area,id_orientacion, emite_norma, b.nro_norma,b.tipo_norma,nro_540,b.observaciones,estado,programa,porc,costo_diario,check_presup,licencia,dias_des,dias_lic,case when (dias_des-dias_lic)>=0 then ((dias_des-dias_lic)*costo_diario*porc/100) else 0 end as costo
+ select distinct uni_acad,area,sub_area,b.id_designacion,'D' as escalafon, docente_nombre,legajo,nro_cargo,anio_acad, b.desde, b.hasta,cat_mapuche, cat_mapuche_nombre,cat_estat,dedic,carac,id_departamento, id_area,id_orientacion, emite_norma, b.nro_norma,b.tipo_norma,nro_540,b.observaciones,estado,programa,porc,costo_diario,check_presup,licencia,dias_des,dias_lic,case when (dias_des-dias_lic)>=0 then ((dias_des-dias_lic)*costo_diario*porc/100) else 0 end as costo
                              from (
                              select area,sub_area,a.id_designacion,a.docente_nombre,a.legajo,a.nro_cargo,a.anio_acad, a.desde, a.hasta,a.cat_mapuche, a.cat_mapuche_nombre,a.cat_estat,a.dedic,a.carac,a.id_departamento, a.id_area,a.id_orientacion, a.uni_acad, a.emite_norma, a.nro_norma,a.tipo_norma,a.nro_540,a.observaciones,a.estado,programa,porc,a.costo_diario,check_presup,licencia,a.dias_des,sum(a.dias_lic) as dias_lic
                             from ((SELECT distinct  area,sub_area,t_d.id_designacion, trim(t_d1.apellido)||', '||t_d1.nombre as docente_nombre, t_d1.legajo, t_d.nro_cargo, t_d.anio_acad, t_d.desde, t_d.hasta, t_d.cat_mapuche, t_cs.descripcion as cat_mapuche_nombre, t_d.cat_estat, t_d.dedic, t_c.descripcion as carac,t_d3.descripcion as id_departamento,t_a.descripcion as id_area, t_o.descripcion as id_orientacion, t_d.uni_acad, t_m.quien_emite_norma as emite_norma, t_n.nro_norma, t_x.nombre_tipo as tipo_norma, t_d.nro_540, t_d.observaciones, t_t.id_programa, m_p.nombre as programa, t_t.porc,m_c.costo_diario, case when t_d.check_presup=0 then 'NO' else 'SI' end as check_presup,'NO' as licencia,t_d.estado,
@@ -177,9 +166,8 @@ from (
 
 
 )aux
-group by uni_acad,area,sub_area
-) b
-on b.uni_acad=a.unidad and a.area=b.area and a.sub_area=b.sub_area                       
+group by uni_acad,legajo,escalafon,area,sub_area
+order by uni_acad,legajo,escalafon,area,sub_area
                             
                             
 
@@ -190,11 +178,13 @@ on b.uni_acad=a.unidad and a.area=b.area and a.sub_area=b.sub_area
         $credito = array();
         /* costodiacategoria= (basico + zona)*13/360 */
         foreach ($credito_unidad as $row) {
-            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['credito'] = $row['credito'];
-            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['nombre'] = $row['nombre'];
-            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['designaciones'] = $row['designaciones'];
-            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['reservas'] = 2;//$row['reservas'];
+            //$credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['credito'] = $row['credito'];
+            //$credito[$row['unidad']][$row['legajo']][$row['escalafon']][$row['area']][$row['sub_area']]['docente_nombre'] = $row['nombre'];
+            $credito[trim($row['unidad'])][$row['legajo']][$row['escalafon']][$row['area']][$row['sub_area']]['designaciones'] = $row['designaciones'];
+            //$credito[$row['unidad']][$row['legajo']][$row['escalafon']][$row['area']][$row['sub_area']]['designaciones'] = $row['cantidad'];
+            //$credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['reservas'] = 2;//$row['reservas'];
         }
+        //print_r($credito);exit;
         return $credito;
     }
     
