@@ -134,7 +134,7 @@ INSERT INTO apex_objeto_ei_filtro_col (objeto_ei_filtro_col, objeto_ei_filtro, o
 	'presupuesto', --objeto_ei_filtro_proyecto
 	'opciones', --tipo
 	'codc_uacad', --nombre
-	'uni_acad', --expresion
+	'codc_uacad', --expresion
 	'Unidad', --etiqueta
 	NULL, --descripcion
 	'0', --obligatorio
