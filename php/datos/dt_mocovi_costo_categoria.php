@@ -5,7 +5,7 @@ class dt_mocovi_costo_categoria extends toba_datos_tabla
         $sql = "select cc.codigo_siu,costo_basico  from 
                 mocovi_costo_categoria cc 
                 inner join mocovi_periodo_presupuestario p 
-                on cc.id_periodo=p.id_periodo and activo_para_carga_presupuestando is true
+                on cc.id_periodo=p.id_periodo and actual is true
                 ";
 
         $costos_categoria = toba::db()->consultar($sql);
