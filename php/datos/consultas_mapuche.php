@@ -123,7 +123,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
 
     protected function get_parametros_periodo() {
         $sql = 'select * from mocovi_periodo_presupuestario
-                where activo_para_carga_presupuestando is true';
+                where actual is true';
         $datos_mapuche = toba::db()->consultar($sql);
         $param = array();
         foreach ($datos_mapuche as $fila) {
@@ -166,6 +166,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
    from(" . $this->dias_total($param) . ") total
     inner join mapuche.dh01 on total.nro_legaj=dh01.nro_legaj
             $where
+                order by total.nro_legaj
              limit 1000   "
         ;
 
@@ -457,24 +458,41 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
         /* se obtienen los dias agrupados por categoria */
         $dias_categoria = $this->get_dias_categoria($where);
         /* se obtiene el crédito por unidad, escalafon, programa (area,subarea) */
-        $credito_unidad = dt_mocovi_credito::get_credito_periodo_actual();
+        $credito_unidad = dt_mocovi_credito::get_credito_designaciones_periodo_actual();
         $salida = array();
         $codigo_unidad = '';
         $codigo_escalafon = '';
         $codigo_area = '';
         $codigo_sub_area = '';
+        //print_r($credito_unidad);        print_r($dias_categoria);exit;
         foreach ($dias_categoria as $fila) {
-
+           /* if($fila['codc_uacad']=='SESO') {
+                $fila['codc_uacad']='FADE';
+                $codigo_unidad='FADE';
+                $codigo_escalafon = $fila['tipo_escal'];
+                $codigo_area = $fila['codn_area'];
+                $codigo_sub_area = $fila['codn_subar']; 
+              
+          
+            }*/
+            if($fila['codc_uacad']=='IBMP') $fila['codc_uacad']='ESCM';
             if ($codigo_unidad != $fila['codc_uacad'] || $codigo_escalafon != $fila['tipo_escal'] || $codigo_area != $fila['codn_area'] || $codigo_sub_area != $fila['codn_subar']) {
                 if ($codigo_unidad != '') {
                     if (isset($credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
                         $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
                         $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+                        $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
+                        $fila_salida['reservas'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['reservas'];
+                        
                     } else {
                         $fila_salida['credito'] = 0;
                         $fila_salida['programa'] = 'Otros';
+                        $fila_salida['designaciones'] = 0;
+                        $fila_salida['reservas'] = 0;
+                        
                     }
                     $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+                    $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'];
                     $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
                 }
                 $codigo_unidad = $fila['codc_uacad'];
@@ -499,11 +517,16 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
             if (isset($credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
                 $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
                 $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+                $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
+                $fila_salida['reservas'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['reservas'];
             } else {
                 $fila_salida['credito'] = 0;
                 $fila_salida['programa'] = 'Otros';
+                $fila_salida['designaciones'] = 0;
+                $fila_salida['reservas'] = 0;
             }
             $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+            $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'] ;
             $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
         }
 /*
@@ -530,12 +553,15 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
     }
 
     /*
-     * agrupa SESO y REC en FADE
+     * agrupa SESO  en FADE
+     * y cambia IBMP por ESCM
      */
 
     function get_credito_escalafon_agrupado($where) {
+        
         $salida = $this->get_credito_escalafon($where);
-        /* if (isset($salida['SESO'])) {
+        //print_r($salida);exit;
+        /*if (isset($salida['SESO'])) {
           $seso = $salida['SESO'];
           //if(isset($salida['RECT']))    $rect = $salida['RECT'];
           if ($seso['tipo_escal'] == 'D' || $seso['tipo_escal'] == 'N') {
@@ -561,8 +587,115 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
           //            $salida['FADE']['dias_total'] += $rect['dias_total'];
           //            unset($salida['RECT']);
           }
-          } */
+          }*/ 
         return $salida;
     }
 
+    
+        public function get_credito_legajo($where) {
+        /* se obtienen los dias agrupados por categoria */
+        $dias_categoria = $this->get_dias_cargo($where);
+        /* se obtiene el crédito por unidad, escalafon, programa (area,subarea) */
+        $credito_unidad = dt_mocovi_credito::get_credito_designaciones_periodo_actual();
+        $salida = array();
+        $codigo_unidad = '';
+        $codigo_escalafon = '';
+        $codigo_area = '';
+        $codigo_sub_area = '';
+        $nro_legaj= '';
+        //print_r($credito_unidad);        print_r($dias_categoria);exit;
+        foreach ($dias_categoria as $fila) {
+           /* if($fila['codc_uacad']=='SESO') {
+                $fila['codc_uacad']='FADE';
+                $codigo_unidad='FADE';
+                $codigo_escalafon = $fila['tipo_escal'];
+                $codigo_area = $fila['codn_area'];
+                $codigo_sub_area = $fila['codn_subar']; 
+              
+          
+            }*/
+            if($fila['codc_uacad']=='IBMP') $fila['codc_uacad']='ESCM';
+            if ($nro_legaj != $fila['nro_legaj'] ||$codigo_unidad != $fila['codc_uacad'] || $codigo_escalafon != $fila['tipo_escal'] || $codigo_area != $fila['codn_area'] || $codigo_sub_area != $fila['codn_subar']) {
+                if ($nro_legaj != '') {
+                    if (isset($credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
+                        $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
+                        $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+                        $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$nro_legaj][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
+                        
+                        
+                    } else {
+                        $fila_salida['credito'] = 0;
+                        $fila_salida['programa'] = 'Otros';
+                        $fila_salida['designaciones'] = 0;
+                        
+                        
+                    }
+                    $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+                    $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'];
+                    $salida[$codigo_unidad . $nro_legaj.$codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
+                }
+                $nro_legaj= $fila['nro_legaj'];
+                $codigo_unidad = $fila['codc_uacad'];
+                $codigo_escalafon = $fila['tipo_escal'];
+                $codigo_area = $fila['codn_area'];
+                $codigo_sub_area = $fila['codn_subar'];
+
+                $fila_salida = $fila;
+                unset($fila_salida['codc_categ']);
+            } else {
+                $fila_salida['ejecutado'] += $fila['ejecutado'];
+                $fila_salida['pagado'] += $fila['pagado'];
+                $fila_salida['a_pagar'] += $fila['a_pagar'];
+                $fila_salida['cantidad'] += $fila['cantidad'];
+                $fila_salida['bruto'] += $fila['bruto'];
+                $fila_salida['aportes'] += $fila['aportes'];
+                $fila_salida['costo'] += $fila['costo'];
+                $fila_salida['dias_total'] += $fila['dias_total'];
+            }
+        }
+        if ($codigo_unidad != '') {
+            if (isset($credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area])) {
+                $fila_salida['credito'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['credito'];
+                $fila_salida['programa'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['nombre'];
+                $fila_salida['designaciones'] = $credito_unidad[$codigo_unidad][$codigo_escalafon][$codigo_area][$codigo_sub_area]['designaciones'];
+            } else {
+                $fila_salida['credito'] = 0;
+                $fila_salida['programa'] = 'Otros';
+                $fila_salida['designaciones'] = 0;
+            }
+            $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+            $fila_salida['diferencia'] =  $fila_salida['designaciones'] - $fila_salida['ejecutado'] ;
+            $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
+        }
+/*
+        foreach ($credito_unidad as $codigo_unidad => $filaunidad) {
+            foreach ($filaunidad as $codigo_escalafon => $filaescalafon) {
+                foreach ($filaescalafon as $codigo_area => $filaarea) {
+                    foreach ($filaarea as $codigo_sub_area => $value) {
+                        if (!isset($salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area])) {
+                            $fila_salida = [];
+                            $fila_salida['codc_uacad']=$codigo_unidad;
+                            $fila_salida['credito'] = $value['credito'];
+                            $fila_salida['programa'] = $value['nombre'];
+                            $fila_salida['ejecutado'] =0;
+                            $fila_salida['resultado'] = $fila_salida['credito'] - $fila_salida['ejecutado'];
+                            $salida[$codigo_unidad . $codigo_escalafon . $codigo_area . $codigo_sub_area] = $fila_salida;
+                            //darlo de alta
+                        }
+                    }
+                }
+            }
+        }
+*/
+        return $salida;
+    }
+    
+    
+    function get_credito_legajo_agrupado($where) {
+        
+        $salida = $this->get_credito_legajo($where);
+
+        return $salida;
+    }
+    
 }

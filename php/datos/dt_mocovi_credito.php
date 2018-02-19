@@ -44,7 +44,7 @@ $where
                 inner join mocovi_programa pp on c.id_programa=pp.id_programa
                 group by c.id_unidad,c.id_escalafon,pp.area,pp.sub_area,pp.nombre
                ";
-
+       //todo: designaciones y reservas por programa 
         $credito_unidad = toba::db()->consultar($sql);
 
         $credito = array();
@@ -52,7 +52,150 @@ $where
         foreach ($credito_unidad as $row) {
             $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['credito'] = $row['credito'];
             $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['nombre'] = $row['nombre'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['designaciones'] = $row['designaciones'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['reservas'] = 2;//$row['reservas'];
         }
         return $credito;
     }
+    
+    static function get_credito_designaciones_periodo_actual() {
+        $sql = "
+
+ --toma periodo 2018
+select unidad,escalafon, a.area, a.sub_area, nombre, credito, designaciones
+from
+(select c.id_unidad as unidad,c.id_escalafon as escalafon,pp.area,pp.sub_area,pp.nombre, 
+            sum(credito) as credito
+            from mocovi_credito c
+                
+                inner join mocovi_periodo_presupuestario p on c.id_periodo=p.id_periodo and actual is true
+                inner join mocovi_programa pp on c.id_programa=pp.id_programa
+                
+                group by c.id_unidad,c.id_escalafon,pp.area,pp.sub_area,pp.nombre) a
+                 inner join
+(
+select uni_acad, area, sub_area, sum(costo) as designaciones
+from (
+
+ select distinct uni_acad,area,sub_area,b.id_designacion,docente_nombre,legajo,nro_cargo,anio_acad, b.desde, b.hasta,cat_mapuche, cat_mapuche_nombre,cat_estat,dedic,carac,id_departamento, id_area,id_orientacion, emite_norma, b.nro_norma,b.tipo_norma,nro_540,b.observaciones,estado,programa,porc,costo_diario,check_presup,licencia,dias_des,dias_lic,case when (dias_des-dias_lic)>=0 then ((dias_des-dias_lic)*costo_diario*porc/100) else 0 end as costo
+                             from (
+                             select area,sub_area,a.id_designacion,a.docente_nombre,a.legajo,a.nro_cargo,a.anio_acad, a.desde, a.hasta,a.cat_mapuche, a.cat_mapuche_nombre,a.cat_estat,a.dedic,a.carac,a.id_departamento, a.id_area,a.id_orientacion, a.uni_acad, a.emite_norma, a.nro_norma,a.tipo_norma,a.nro_540,a.observaciones,a.estado,programa,porc,a.costo_diario,check_presup,licencia,a.dias_des,sum(a.dias_lic) as dias_lic
+                            from ((SELECT distinct  area,sub_area,t_d.id_designacion, trim(t_d1.apellido)||', '||t_d1.nombre as docente_nombre, t_d1.legajo, t_d.nro_cargo, t_d.anio_acad, t_d.desde, t_d.hasta, t_d.cat_mapuche, t_cs.descripcion as cat_mapuche_nombre, t_d.cat_estat, t_d.dedic, t_c.descripcion as carac,t_d3.descripcion as id_departamento,t_a.descripcion as id_area, t_o.descripcion as id_orientacion, t_d.uni_acad, t_m.quien_emite_norma as emite_norma, t_n.nro_norma, t_x.nombre_tipo as tipo_norma, t_d.nro_540, t_d.observaciones, t_t.id_programa, m_p.nombre as programa, t_t.porc,m_c.costo_diario, case when t_d.check_presup=0 then 'NO' else 'SI' end as check_presup,'NO' as licencia,t_d.estado,
+                        0 as dias_lic, case when t_d.desde<='2018-02-01' then ( case when (t_d.hasta>='2019-01-31' or t_d.hasta is null ) then (((cast('2019-01-31' as date)-cast('2018-02-01' as date))+1)) else ((t_d.hasta-'2018-02-01')+1) end ) else (case when (t_d.hasta>='2019-01-31' or t_d.hasta is null) then ((('2019-01-31')-t_d.desde+1)) else ((t_d.hasta-t_d.desde+1)) end ) end as dias_des 
+                            FROM designacion as t_d LEFT OUTER JOIN categ_siu as t_cs ON (t_d.cat_mapuche = t_cs.codigo_siu) 
+                            LEFT OUTER JOIN categ_estatuto as t_ce ON (t_d.cat_estat = t_ce.codigo_est) 
+                            LEFT OUTER JOIN norma as t_n ON (t_d.id_norma = t_n.id_norma) 
+                            LEFT OUTER JOIN tipo_emite as t_m ON (t_n.emite_norma = t_m.cod_emite) 
+                            LEFT OUTER JOIN tipo_norma_exp as t_x ON (t_x.cod_tipo = t_n.tipo_norma) 
+                            LEFT OUTER JOIN departamento as t_d3 ON (t_d.id_departamento = t_d3.iddepto) 
+                            LEFT OUTER JOIN area as t_a ON (t_d.id_area = t_a.idarea) 
+                            LEFT OUTER JOIN orientacion as t_o ON (t_d.id_orientacion = t_o.idorient and t_o.idarea=t_a.idarea)
+                            LEFT OUTER JOIN imputacion as t_t ON (t_d.id_designacion = t_t.id_designacion) 
+                            LEFT OUTER JOIN mocovi_programa as m_p ON (t_t.id_programa = m_p.id_programa) 
+                            LEFT OUTER JOIN mocovi_periodo_presupuestario m_e ON ( m_e.anio=2018)
+                            LEFT OUTER JOIN mocovi_costo_categoria as m_c ON (t_d.cat_mapuche = m_c.codigo_siu and m_c.id_periodo=m_e.id_periodo),
+                            docente as t_d1,
+                            caracter as t_c,
+                            unidad_acad as t_ua 
+                            
+                        WHERE t_d.id_docente = t_d1.id_docente
+                            AND t_d.carac = t_c.id_car 
+                            AND t_d.uni_acad = t_ua.sigla 
+                            AND t_d.tipo_desig=1 
+                            AND not exists(SELECT * from novedad t_no
+                                            where t_no.id_designacion=t_d.id_designacion
+                                            and (t_no.tipo_nov=1 or t_no.tipo_nov=2 or t_no.tipo_nov=4 or t_no.tipo_nov=5)))
+                        UNION
+                        (SELECT distinct m_p.area,m_p.sub_area,t_d.id_designacion, trim(t_d1.apellido)||', '||t_d1.nombre as docente_nombre, t_d1.legajo, t_d.nro_cargo, t_d.anio_acad, t_d.desde, t_d.hasta, t_d.cat_mapuche, t_cs.descripcion as cat_mapuche_nombre, t_d.cat_estat, t_d.dedic, t_c.descripcion as carac, t_d3.descripcion as id_departamento,t_a.descripcion as id_area, t_o.descripcion as id_orientacion, t_d.uni_acad, t_m.quien_emite_norma as emite_norma, t_n.nro_norma, t_x.nombre_tipo as tipo_norma, t_d.nro_540, t_d.observaciones, t_t.id_programa, m_p.nombre as programa, t_t.porc,m_c.costo_diario, case when t_d.check_presup=0 then 'NO' else 'SI' end as check_presup,'NO' as licencia,t_d.estado,
+                            0 as dias_lic, case when t_d.desde<='2018-02-01' then ( case when (t_d.hasta>='2019-01-31' or t_d.hasta is null ) then (((cast('2019-01-31' as date)-cast('2018-02-01' as date))+1)) else ((t_d.hasta-'2018-02-01')+1) end ) else (case when (t_d.hasta>='2019-01-31' or t_d.hasta is null) then ((('2019-01-31')-t_d.desde+1)) else ((t_d.hasta-t_d.desde+1)) end ) end as dias_des 
+                            FROM designacion as t_d LEFT OUTER JOIN categ_siu as t_cs ON (t_d.cat_mapuche = t_cs.codigo_siu) 
+                            LEFT OUTER JOIN categ_estatuto as t_ce ON (t_d.cat_estat = t_ce.codigo_est) 
+                            LEFT OUTER JOIN norma as t_n ON (t_d.id_norma = t_n.id_norma) 
+                            LEFT OUTER JOIN tipo_emite as t_m ON (t_n.emite_norma = t_m.cod_emite) 
+                            LEFT OUTER JOIN tipo_norma_exp as t_x ON (t_x.cod_tipo = t_n.tipo_norma) 
+                            LEFT OUTER JOIN tipo_emite as t_te ON (t_d.emite_cargo_gestion = t_te.cod_emite)
+                            LEFT OUTER JOIN departamento as t_d3 ON (t_d.id_departamento = t_d3.iddepto) 
+                            LEFT OUTER JOIN area as t_a ON (t_d.id_area = t_a.idarea) 
+                            LEFT OUTER JOIN orientacion as t_o ON (t_d.id_orientacion = t_o.idorient and t_o.idarea=t_a.idarea)
+                            LEFT OUTER JOIN imputacion as t_t ON (t_d.id_designacion = t_t.id_designacion) 
+                            LEFT OUTER JOIN mocovi_programa as m_p ON (t_t.id_programa = m_p.id_programa) 
+                            LEFT OUTER JOIN mocovi_periodo_presupuestario m_e ON (m_e.anio=2018)
+                            LEFT OUTER JOIN mocovi_costo_categoria as m_c ON (t_d.cat_mapuche = m_c.codigo_siu and m_c.id_periodo=m_e.id_periodo),
+                            docente as t_d1,
+                            caracter as t_c,
+                            unidad_acad as t_ua,
+                            novedad as t_no 
+                            
+                        WHERE t_d.id_docente = t_d1.id_docente
+                            AND t_d.carac = t_c.id_car 
+                            AND t_d.uni_acad = t_ua.sigla 
+                            AND t_d.tipo_desig=1 
+                            AND t_no.id_designacion=t_d.id_designacion
+                            AND (((t_no.tipo_nov=2 or t_no.tipo_nov=5 ) AND (t_no.tipo_norma is null or t_no.tipo_emite is null or t_no.norma_legal is null))
+                                  OR (t_no.tipo_nov=1 or t_no.tipo_nov=4))
+                             )
+                        UNION
+                               (SELECT distinct m_p.area,m_p.sub_area,t_d.id_designacion, trim(t_d1.apellido)||', '||t_d1.nombre as docente_nombre, t_d1.legajo, t_d.nro_cargo, t_d.anio_acad, t_d.desde, t_d.hasta, t_d.cat_mapuche, t_cs.descripcion as cat_mapuche_nombre, t_d.cat_estat, t_d.dedic, t_c.descripcion as carac,t_d3.descripcion as id_departamento,t_a.descripcion as id_area, t_o.descripcion as id_orientacion, t_d.uni_acad, t_m.quien_emite_norma as emite_norma, t_n.nro_norma, t_x.nombre_tipo as tipo_norma, t_d.nro_540, t_d.observaciones, t_t.id_programa, m_p.nombre as programa, t_t.porc,m_c.costo_diario, case when t_d.check_presup=0 then 'NO' else 'SI' end as check_presup,'NO' as licencia,t_d.estado,
+                        sum(case when (t_no.desde>'2019-01-31' or (t_no.hasta is not null and t_no.hasta<'2018-02-01')) then 0 else (case when t_no.desde<='2018-02-01' then ( case when (t_no.hasta is null or t_no.hasta>='2019-01-31' ) then (((cast('2019-01-31' as date)-cast('2018-02-01' as date))+1)) else ((t_no.hasta-'2018-02-01')+1) end ) else (case when (t_no.hasta is null or t_no.hasta>='2019-01-31' ) then ((('2019-01-31')-t_no.desde+1)) else ((t_no.hasta-t_no.desde+1)) end ) end )end ) as dias_lic,
+                        case when t_d.desde<='2018-02-01' then ( case when (t_d.hasta>='2019-01-31' or t_d.hasta is null ) then (((cast('2019-01-31' as date)-cast('2018-02-01' as date))+1)) else ((t_d.hasta-'2018-02-01')+1) end ) else (case when (t_d.hasta>='2019-01-31' or t_d.hasta is null) then ((('2019-01-31')-t_d.desde+1)) else ((t_d.hasta-t_d.desde+1)) end ) end as dias_des 
+                            FROM designacion as t_d LEFT OUTER JOIN categ_siu as t_cs ON (t_d.cat_mapuche = t_cs.codigo_siu) 
+                            LEFT OUTER JOIN categ_estatuto as t_ce ON (t_d.cat_estat = t_ce.codigo_est) 
+                            LEFT OUTER JOIN norma as t_n ON (t_d.id_norma = t_n.id_norma) 
+                            LEFT OUTER JOIN tipo_emite as t_m ON (t_n.emite_norma = t_m.cod_emite) 
+                            LEFT OUTER JOIN tipo_norma_exp as t_x ON (t_x.cod_tipo = t_n.tipo_norma) 
+                            LEFT OUTER JOIN tipo_emite as t_te ON (t_d.emite_cargo_gestion = t_te.cod_emite)
+                            LEFT OUTER JOIN departamento as t_d3 ON (t_d.id_departamento = t_d3.iddepto) 
+                            LEFT OUTER JOIN area as t_a ON (t_d.id_area = t_a.idarea) 
+                            LEFT OUTER JOIN orientacion as t_o ON (t_d.id_orientacion = t_o.idorient and t_o.idarea=t_a.idarea)
+                            LEFT OUTER JOIN imputacion as t_t ON (t_d.id_designacion = t_t.id_designacion) 
+                            LEFT OUTER JOIN mocovi_programa as m_p ON (t_t.id_programa = m_p.id_programa) 
+                            LEFT OUTER JOIN mocovi_periodo_presupuestario m_e ON (m_e.anio=2018)
+                            LEFT OUTER JOIN mocovi_costo_categoria as m_c ON (t_d.cat_mapuche = m_c.codigo_siu and m_c.id_periodo=m_e.id_periodo),
+                            docente as t_d1,
+                            caracter as t_c,
+                            unidad_acad as t_ua,
+                            novedad as t_no 
+                            
+                        WHERE t_d.id_docente = t_d1.id_docente
+                            	AND t_d.carac = t_c.id_car 
+                            	AND t_d.uni_acad = t_ua.sigla 
+                           	AND t_d.tipo_desig=1 
+                           	AND t_no.id_designacion=t_d.id_designacion 
+                           	AND (t_no.tipo_nov=2 or t_no.tipo_nov=5) 
+                           	AND t_no.tipo_norma is not null 
+                           	AND t_no.tipo_emite is not null 
+                           	AND t_no.norma_legal is not null
+                        GROUP BY m_p.area,m_p.sub_area,t_d.id_designacion,docente_nombre,t_d1.legajo,t_d.nro_cargo,anio_acad, t_d.desde, t_d.hasta, t_d.cat_mapuche, cat_mapuche_nombre, cat_estat, dedic,t_c.descripcion , t_d3.descripcion , t_a.descripcion , t_o.descripcion ,t_d.uni_acad, t_m.quien_emite_norma, t_n.nro_norma, t_x.nombre_tipo , t_d.nro_540, t_d.observaciones, m_p.nombre, t_t.id_programa, t_t.porc,m_c.costo_diario,  check_presup, licencia,t_d.estado   	
+                             )
+                      ) a
+                          
+                          
+                           WHERE a.desde <= '2019-01-31' and (a.hasta >= '2018-02-01' or a.hasta is null)
+                            -- and uni_acad ='FAIF'
+                             GROUP BY area,sub_area,a.id_designacion,a.docente_nombre,a.legajo,a.nro_cargo,a.anio_acad, a.desde, a.hasta,a.cat_mapuche, a.cat_mapuche_nombre,a.cat_estat,a.dedic,a.carac,a.id_departamento, a.id_area,a.id_orientacion, a.uni_acad, a.emite_norma, a.nro_norma,a.tipo_norma,a.nro_540,a.observaciones,estado,programa,porc,a.costo_diario,check_presup,licencia,dias_des
+                            ) b 
+
+
+)aux
+group by uni_acad,area,sub_area
+) b
+on b.uni_acad=a.unidad and a.area=b.area and a.sub_area=b.sub_area                       
+                            
+                            
+
+               ";
+       //todo: designaciones y reservas por programa 
+        $credito_unidad = toba::db()->consultar($sql);
+
+        $credito = array();
+        /* costodiacategoria= (basico + zona)*13/360 */
+        foreach ($credito_unidad as $row) {
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['credito'] = $row['credito'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['nombre'] = $row['nombre'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['designaciones'] = $row['designaciones'];
+            $credito[$row['unidad']][$row['escalafon']][$row['area']][$row['sub_area']]['reservas'] = 2;//$row['reservas'];
+        }
+        return $credito;
+    }
+    
 }
