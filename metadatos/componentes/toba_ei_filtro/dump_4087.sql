@@ -134,7 +134,7 @@ INSERT INTO apex_objeto_ei_filtro_col (objeto_ei_filtro_col, objeto_ei_filtro, o
 	'presupuesto', --objeto_ei_filtro_proyecto
 	'numero', --tipo
 	'nro_legaj', --nombre
-	'nro_legaj', --expresion
+	'total.nro_legaj', --expresion
 	'Legajo', --etiqueta
 	NULL, --descripcion
 	'0', --obligatorio
