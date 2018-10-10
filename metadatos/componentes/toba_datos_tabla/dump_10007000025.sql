@@ -1,5 +1,5 @@
 ------------------------------------------------------------
---[10007000025]--  mocovi_credito 
+--[10007000025]--  DT - mocovi_credito 
 ------------------------------------------------------------
 
 ------------------------------------------------------------
@@ -20,7 +20,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	'datos/dt_mocovi_credito.php', --subclase_archivo
 	NULL, --objeto_categoria_proyecto
 	NULL, --objeto_categoria
-	'mocovi_credito', --nombre
+	'DT - mocovi_credito', --nombre
 	NULL, --titulo
 	NULL, --colapsable
 	NULL, --descripcion
@@ -49,136 +49,150 @@ INSERT INTO apex_objeto_db_registros (objeto_proyecto, objeto, max_registros, mi
 	'10007000025', --objeto
 	NULL, --max_registros
 	NULL, --min_registros
-	NULL, --punto_montaje
+	'10007000002', --punto_montaje
 	'1', --ap
 	NULL, --ap_clase
 	NULL, --ap_archivo
 	'mocovi_credito', --tabla
 	NULL, --tabla_ext
 	NULL, --alias
-	NULL, --modificar_claves
+	'0', --modificar_claves
 	'presupuesto', --fuente_datos_proyecto
 	'presupuesto', --fuente_datos
 	'1', --permite_actualizacion_automatica
-	NULL, --esquema
-	NULL  --esquema_ext
+	'public', --esquema
+	'public'  --esquema_ext
 );
 
 ------------------------------------------------------------
 -- apex_objeto_db_registros_col
 ------------------------------------------------------------
 
---- INICIO Grupo de desarrollo 10007
+--- INICIO Grupo de desarrollo 0
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000026', --col_id
+	'2175', --col_id
 	'id_credito', --columna
 	'E', --tipo
 	'1', --pk
 	'mocovi_credito_id_credito_seq', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'1', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000027', --col_id
+	'2176', --col_id
 	'id_periodo', --columna
-	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
+	'E', --tipo
+	'0', --pk
+	'', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000028', --col_id
+	'2177', --col_id
 	'id_unidad', --columna
 	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
-	NULL, --largo
+	'0', --pk
+	'', --secuencia
+	'4', --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000029', --col_id
+	'2178', --col_id
 	'id_escalafon', --columna
 	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
-	NULL, --largo
+	'0', --pk
+	'', --secuencia
+	'1', --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000030', --col_id
+	'2179', --col_id
 	'id_tipo_credito', --columna
-	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
+	'E', --tipo
+	'0', --pk
+	'', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000031', --col_id
+	'2180', --col_id
 	'descripcion', --columna
 	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
+	'0', --pk
+	'', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000032', --col_id
+	'2181', --col_id
 	'credito', --columna
 	'N', --tipo
-	NULL, --pk
-	NULL, --secuencia
+	'0', --pk
+	'', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
 INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
 	'presupuesto', --objeto_proyecto
 	'10007000025', --objeto
-	'10007000033', --col_id
+	'2182', --col_id
 	'id_programa', --columna
-	'C', --tipo
-	NULL, --pk
-	NULL, --secuencia
+	'E', --tipo
+	'0', --pk
+	'', --secuencia
 	NULL, --largo
 	NULL, --no_nulo
-	NULL, --no_nulo_db
+	'0', --no_nulo_db
 	NULL, --externa
-	NULL  --tabla
+	'mocovi_credito'  --tabla
 );
---- FIN Grupo de desarrollo 10007
+INSERT INTO apex_objeto_db_registros_col (objeto_proyecto, objeto, col_id, columna, tipo, pk, secuencia, largo, no_nulo, no_nulo_db, externa, tabla) VALUES (
+	'presupuesto', --objeto_proyecto
+	'10007000025', --objeto
+	'2183', --col_id
+	'documento', --columna
+	'X', --tipo
+	'0', --pk
+	'', --secuencia
+	NULL, --largo
+	NULL, --no_nulo
+	'0', --no_nulo_db
+	NULL, --externa
+	'mocovi_credito'  --tabla
+);
+--- FIN Grupo de desarrollo 0

@@ -1,6 +1,10 @@
 <?php
 class dt_mocovi_credito extends toba_datos_tabla
 {
+        function setear_archivo($id_credito,$nombre){
+            $sql="update mocovi_credito set documento='".$nombre."' where id_credito=".$id_credito;
+            toba::db('presupuesto')->consultar($sql);
+        }
 	function get_listado($where=null)
 	{
             if(!is_null($where)){
@@ -17,7 +21,8 @@ class dt_mocovi_credito extends toba_datos_tabla
 			t_mc.descripcion,
 			t_mc.credito,
 			t_mp.nombre as id_programa_nombre,
-                        t_mtp.tipo as tipo_programa
+                        t_mtp.tipo as tipo_programa,
+                        sub.fecha as fecha
 		FROM
 			mocovi_credito as t_mc	LEFT OUTER JOIN mocovi_periodo_presupuestario as t_mpp ON (t_mc.id_periodo = t_mpp.id_periodo)
 			LEFT OUTER JOIN unidad_acad as t_ua ON (t_mc.id_unidad = t_ua.sigla)
@@ -25,6 +30,8 @@ class dt_mocovi_credito extends toba_datos_tabla
 			LEFT OUTER JOIN mocovi_tipo_credito as t_mtc ON (t_mc.id_tipo_credito = t_mtc.id_tipo_credito)
 			LEFT OUTER JOIN mocovi_programa as t_mp ON (t_mc.id_programa = t_mp.id_programa)
                         LEFT OUTER JOIN mocovi_tipo_programa as t_mtp ON (t_mp.id_tipo_programa = t_mtp.id_tipo_programa)
+                        LEFT OUTER JOIN ( select id_credito,max(auditoria_fecha) as fecha from public_auditoria.logs_mocovi_credito la
+                                          group by la.id_credito ) sub on (sub.id_credito=t_mc.id_credito)
                         
 $where
 

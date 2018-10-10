@@ -95,7 +95,7 @@ INSERT INTO apex_objeto_cuadro (objeto_cuadro_proyecto, objeto_cuadro, titulo, s
 	'0', --clave_dbr
 	NULL, --archivos_callbacks
 	'100%', --ancho
-	'0', --ordenar
+	'1', --ordenar
 	'0', --paginar
 	NULL, --tamano_pagina
 	'P', --tipo_paginado
@@ -129,14 +129,48 @@ INSERT INTO apex_objeto_cuadro (objeto_cuadro_proyecto, objeto_cuadro, titulo, s
 -- apex_objeto_ei_cuadro_columna
 ------------------------------------------------------------
 
+--- INICIO Grupo de desarrollo 0
+INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro, objeto_cuadro_col, clave, orden, titulo, estilo_titulo, estilo, ancho, formateo, vinculo_indice, no_ordenar, mostrar_xls, mostrar_pdf, pdf_propiedades, desabilitado, total, total_cc, usar_vinculo, vinculo_carpeta, vinculo_item, vinculo_popup, vinculo_popup_param, vinculo_target, vinculo_celda, vinculo_servicio, permitir_html, grupo, evento_asociado) VALUES (
+	'presupuesto', --objeto_cuadro_proyecto
+	'10007000027', --objeto_cuadro
+	'4398', --objeto_cuadro_col
+	'fecha', --clave
+	'1', --orden
+	'Fecha Última Actualización', --titulo
+	'ei-cuadro-col-tit', --estilo_titulo
+	'4', --estilo
+	NULL, --ancho
+	'1', --formateo
+	NULL, --vinculo_indice
+	NULL, --no_ordenar
+	NULL, --mostrar_xls
+	NULL, --mostrar_pdf
+	NULL, --pdf_propiedades
+	NULL, --desabilitado
+	NULL, --total
+	NULL, --total_cc
+	NULL, --usar_vinculo
+	NULL, --vinculo_carpeta
+	NULL, --vinculo_item
+	NULL, --vinculo_popup
+	NULL, --vinculo_popup_param
+	NULL, --vinculo_target
+	NULL, --vinculo_celda
+	NULL, --vinculo_servicio
+	'0', --permitir_html
+	NULL, --grupo
+	NULL  --evento_asociado
+);
+--- FIN Grupo de desarrollo 0
+
 --- INICIO Grupo de desarrollo 10007
 INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro, objeto_cuadro_col, clave, orden, titulo, estilo_titulo, estilo, ancho, formateo, vinculo_indice, no_ordenar, mostrar_xls, mostrar_pdf, pdf_propiedades, desabilitado, total, total_cc, usar_vinculo, vinculo_carpeta, vinculo_item, vinculo_popup, vinculo_popup_param, vinculo_target, vinculo_celda, vinculo_servicio, permitir_html, grupo, evento_asociado) VALUES (
 	'presupuesto', --objeto_cuadro_proyecto
 	'10007000027', --objeto_cuadro
 	'10007000021', --objeto_cuadro_col
 	'id_periodo_nombre', --clave
-	'1', --orden
-	'Periodo', --titulo
+	'2', --orden
+	'Período', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho
@@ -166,7 +200,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000022', --objeto_cuadro_col
 	'id_unidad_nombre', --clave
-	'2', --orden
+	'3', --orden
 	'Unidad', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
@@ -197,8 +231,8 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000023', --objeto_cuadro_col
 	'id_escalafon_nombre', --clave
-	'3', --orden
-	'Escalafon', --titulo
+	'4', --orden
+	'Escalafón', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho
@@ -228,8 +262,8 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000024', --objeto_cuadro_col
 	'id_tipo_credito_nombre', --clave
-	'4', --orden
-	'Tipo Credito', --titulo
+	'5', --orden
+	'Tipo Crédito', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho
@@ -259,8 +293,8 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000025', --objeto_cuadro_col
 	'descripcion', --clave
-	'7', --orden
-	'Descripcion', --titulo
+	'8', --orden
+	'Descripción', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
 	NULL, --ancho
@@ -290,8 +324,8 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000026', --objeto_cuadro_col
 	'credito', --clave
-	'8', --orden
-	'Credito', --titulo
+	'9', --orden
+	'Crédito', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'col-num-p1', --estilo
 	NULL, --ancho
@@ -321,7 +355,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000027', --objeto_cuadro_col
 	'id_programa_nombre', --clave
-	'6', --orden
+	'7', --orden
 	'Programa', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
@@ -352,7 +386,7 @@ INSERT INTO apex_objeto_ei_cuadro_columna (objeto_cuadro_proyecto, objeto_cuadro
 	'10007000027', --objeto_cuadro
 	'10007000034', --objeto_cuadro_col
 	'tipo_programa', --clave
-	'5', --orden
+	'6', --orden
 	'Grupo', --titulo
 	'ei-cuadro-col-tit', --estilo_titulo
 	'4', --estilo
