@@ -22,7 +22,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --objeto_categoria
 	'ABM Periodo - Form', --nombre
 	NULL, --titulo
-	NULL, --colapsable
+	'0', --colapsable
 	NULL, --descripcion
 	'presupuesto', --fuente_datos_proyecto
 	'presupuesto', --fuente_datos
@@ -37,7 +37,7 @@ INSERT INTO apex_objeto (proyecto, objeto, anterior, identificador, reflexivo, c
 	NULL, --parametro_f
 	NULL, --usuario
 	'2015-09-16 14:38:15', --creacion
-	NULL  --posicion_botonera
+	'abajo'  --posicion_botonera
 );
 --- FIN Grupo de desarrollo 10007
 
@@ -201,8 +201,8 @@ INSERT INTO apex_objeto_ut_formulario (objeto_ut_formulario_proyecto, objeto_ut_
 	NULL, --clase
 	NULL, --auto_reset
 	NULL, --ancho
-	NULL, --ancho_etiqueta
-	NULL, --expandir_descripcion
+	'150px', --ancho_etiqueta
+	'0', --expandir_descripcion
 	NULL, --campo_bl
 	NULL, --scroll
 	NULL, --filas
@@ -219,8 +219,8 @@ INSERT INTO apex_objeto_ut_formulario (objeto_ut_formulario_proyecto, objeto_ut_
 	NULL, --ev_seleccion
 	NULL, --alto
 	NULL, --analisis_cambios
-	NULL, --no_imprimir_efs_sin_estado
-	NULL, --resaltar_efs_con_estado
+	'0', --no_imprimir_efs_sin_estado
+	'0', --resaltar_efs_con_estado
 	NULL, --template
 	NULL  --template_impresion
 );
@@ -238,8 +238,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'anio', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'0', --orden
+	'0', --oculto_relaja_obligatorio
+	'1', --orden
 	'Anio', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -318,8 +318,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_fecha', --elemento_formulario
 	'fecha_inicio', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'1', --orden
+	'0', --oculto_relaja_obligatorio
+	'2', --orden
 	'Fecha Inicio', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -398,8 +398,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_fecha', --elemento_formulario
 	'fecha_fin', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'2', --orden
+	'0', --oculto_relaja_obligatorio
+	'3', --orden
 	'Fecha Fin', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -478,8 +478,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_fecha', --elemento_formulario
 	'fecha_ultima_liquidacion', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'3', --orden
+	'0', --oculto_relaja_obligatorio
+	'4', --orden
 	'Fecha Ultima Liquidacion', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -558,8 +558,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_checkbox', --elemento_formulario
 	'actual', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'4', --orden
+	'0', --oculto_relaja_obligatorio
+	'5', --orden
 	'Actual', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -638,8 +638,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'id_liqui_ini', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'5', --orden
+	'0', --oculto_relaja_obligatorio
+	'6', --orden
 	'Id Liqui Ini', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -718,8 +718,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'id_liqui_fin', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'6', --orden
+	'0', --oculto_relaja_obligatorio
+	'7', --orden
 	'Id Liqui Fin', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -798,8 +798,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'id_liqui_1sac', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'7', --orden
+	'0', --oculto_relaja_obligatorio
+	'8', --orden
 	'Id Liqui 1sac', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -878,8 +878,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_editable_numero', --elemento_formulario
 	'id_liqui_2sac', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'8', --orden
+	'0', --oculto_relaja_obligatorio
+	'9', --orden
 	'Id Liqui 2sac', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -958,8 +958,8 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_checkbox', --elemento_formulario
 	'presupuestando', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'9', --orden
+	'0', --oculto_relaja_obligatorio
+	'10', --orden
 	'Presupuestando', --etiqueta
 	NULL, --etiqueta_estilo
 	NULL, --descripcion
@@ -1038,20 +1038,21 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	'ef_checkbox', --elemento_formulario
 	'activo_para_carga_presupuestando', --columnas
 	'0', --obligatorio
-	NULL, --oculto_relaja_obligatorio
-	'10', --orden
+	'0', --oculto_relaja_obligatorio
+	'11', --orden
 	'Activo Para Carga Presupuestando', --etiqueta
 	NULL, --etiqueta_estilo
-	NULL, --descripcion
-	NULL, --colapsado
-	NULL, --desactivado
+	'Tildado: La UA esta habilitada para hacer movimientos en el período<br>
+Destildado: La UA esta deshabilitada para hacer movimientos en el período', --descripcion
+	'0', --colapsado
+	'0', --desactivado
 	NULL, --estilo
 	NULL, --total
 	NULL, --inicializacion
-	NULL, --permitir_html
-	NULL, --deshabilitar_rest_func
+	'0', --permitir_html
+	'0', --deshabilitar_rest_func
 	NULL, --estado_defecto
-	NULL, --solo_lectura
+	'0', --solo_lectura
 	'0', --solo_lectura_modificacion
 	NULL, --carga_metodo
 	NULL, --carga_clase
@@ -1090,11 +1091,11 @@ INSERT INTO apex_objeto_ei_formulario_ef (objeto_ei_formulario_fila, objeto_ei_f
 	NULL, --popup_carga_desc_include
 	NULL, --popup_puede_borrar_estado
 	NULL, --fieldset_fin
-	NULL, --check_valor_si
-	NULL, --check_valor_no
-	NULL, --check_desc_si
-	NULL, --check_desc_no
-	NULL, --check_ml_toggle
+	'1', --check_valor_si
+	'0', --check_valor_no
+	'Sí', --check_desc_si
+	'No', --check_desc_no
+	'0', --check_ml_toggle
 	NULL, --fijo_sin_estado
 	NULL, --editor_ancho
 	NULL, --editor_alto
