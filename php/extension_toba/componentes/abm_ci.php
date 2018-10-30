@@ -93,20 +93,21 @@ class abm_ci extends toba_ci {
                     $datos2['credito']=$datos['credito'];
                     $this->dep('datos')->tabla($this->nombre_tabla)->set($datos2);
                     $this->dep('datos')->sincronizar();
-                    $this->resetear();
+                    
                     //adjunto
                     if(isset($datos['documento'])) {
                         $res1=$this->dep('datos')->tabla($this->nombre_tabla)->get();
-                        $nombre=$res1['id_credito'].".pdf";
+                        $nombre=strval($res1['id_credito']).".pdf";
                         //$destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".$nombre;
                         $destino="/home/cristian/toba_2.7.1/proyectos/designa/www/creditos_dependencia/".$nombre;
-                        if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){//mueve un archivo a una nueva direccion, retorna true cuando lo hace y falso en caso de que no
-                           $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res1['id_credito'],strval($nombre));
-                        }
-                        
+                        if(copy($datos['documento']['tmp_name'], $destino)){
+                        //if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){//mueve un archivo a una nueva direccion, retorna true cuando lo hace y falso en caso de que no
+                           $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res1['id_credito'],$nombre);
+                        }//moverá el archivo y no lo copiará, lo que significa que funcionará solo una vez.
                     }
-                    
-                    //da credito
+                    $this->resetear();
+                   
+                   // da credito
                     $datos3['id_periodo']=$datos['id_periodo'];
                     $datos3['id_unidad']=$datos['id_unidad'];
                     $datos3['id_escalafon']=$datos['id_escalafon'];
@@ -116,30 +117,26 @@ class abm_ci extends toba_ci {
                     $datos3['credito']=$datos['credito']*(-1);
                     $this->dep('datos')->tabla($this->nombre_tabla)->set($datos3);
                     $this->dep('datos')->sincronizar();
-                    if(isset($datos['documento'])) {
+                    if(file_exists($destino)){
                         $res2=$this->dep('datos')->tabla($this->nombre_tabla)->get();
-                        $nombre2=$res2['id_credito'].".pdf";
-                        //$destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".$nombre2;
-                        $destino="/home/cristian/toba_2.7.1/proyectos/designa/www/creditos_dependencia/".$nombre2;
-                        if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){
-                            $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res2['id_credito'],$nombre2);
-                        }
+                        $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res2['id_credito'],$nombre);
                     }
-                    
-                    
+              
                     $this->resetear();
                     
                 }else{//inicial
-
+ 
                     $this->dep('datos')->tabla($this->nombre_tabla)->set($datos);
                     $this->dep('datos')->sincronizar();
-                    $res=$this->dep('datos')->tabla($this->nombre_tabla)->get();
-                    $nombre=$res['id_credito'].".pdf";
-                    //$destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".$nombre;
-                    $destino="/home/cristian/toba_2.7.1/proyectos/designa/www/creditos_dependencia/".$nombre;
-                    if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){
-                        $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res['id_credito'],$nombre);
-                    }
+                    if(isset($datos['documento'])) {
+                        $res=$this->dep('datos')->tabla($this->nombre_tabla)->get();
+                        $nombre=$res['id_credito'].".pdf";
+                        //$destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".strval($nombre);
+                        $destino="/home/cristian/toba_2.7.1/proyectos/designa/www/creditos_dependencia/".$nombre;
+                        if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){
+                            $this->dep('datos')->tabla($this->nombre_tabla)->setear_archivo($res['id_credito'],$nombre);
+                        }
+                     }
                     $this->resetear();
                 } 
                     
