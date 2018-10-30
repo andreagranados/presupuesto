@@ -188,7 +188,9 @@ order by a.unidad,a.escalafon,a.area,a.sub_area
 
  --toma periodo 2018
 
-select uni_acad as unidad, legajo,escalafon,area, sub_area, string_agg(cat_mapuche, ' ') as cat_mocovi, sum(costo) as designaciones, count(nro_cargo) as cantidad
+select uni_acad as unidad, legajo,escalafon,area, sub_area, 
+--string_agg(cat_mapuche, ' ') as cat_mocovi,
+'' as cat_mocovi,sum(costo) as designaciones, count(nro_cargo) as cantidad
 from (
 
  select distinct uni_acad,area,sub_area,b.id_designacion,'D' as escalafon, docente_nombre,legajo,nro_cargo,anio_acad, b.desde, b.hasta,cat_mapuche, cat_mapuche_nombre,cat_estat,dedic,carac,id_departamento, id_area,id_orientacion, emite_norma, b.nro_norma,b.tipo_norma,nro_540,b.observaciones,estado,programa,porc,costo_diario,check_presup,licencia,dias_des,dias_lic,case when (dias_des-dias_lic)>=0 then ((dias_des-dias_lic)*costo_diario*porc/100) else 0 end as costo

@@ -1,5 +1,5 @@
 ------------------------------------------------------------
---[3692]--  Control Preupuestario Mapuche 
+--[3692]--  Control Presupuestario Mapuche 
 ------------------------------------------------------------
 
 ------------------------------------------------------------
@@ -23,7 +23,7 @@ INSERT INTO apex_item (item_id, proyecto, item, padre_id, padre_proyecto, padre,
 	NULL, --actividad_buffer
 	NULL, --actividad_patron_proyecto
 	NULL, --actividad_patron
-	'Control Preupuestario Mapuche', --nombre
+	'Control Presupuestario Mapuche', --nombre
 	NULL, --descripcion
 	NULL, --punto_montaje
 	NULL, --actividad_accion
