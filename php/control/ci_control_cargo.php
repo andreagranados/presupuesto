@@ -8,7 +8,7 @@ class ci_control_cargo extends abm_ci
 	//-----------------------------------------------------------------------------------
 
 	/**
-	 * Permite cambiar la configuración del cuadro previo a la generación de la salida
+	 * Permite cambiar la configuraciï¿½n del cuadro previo a la generaciï¿½n de la salida
 	 * El formato de carga es de tipo recordset: array( array('columna' => valor, ...), ...)
 	 */
 	function conf__cuadro(toba_ei_cuadro $cuadro)
@@ -23,7 +23,7 @@ class ci_control_cargo extends abm_ci
 	//-----------------------------------------------------------------------------------
 
 	/**
-	 * Permite cambiar la configuración del formulario previo a la generación de la salida
+	 * Permite cambiar la configuraciï¿½n del formulario previo a la generaciï¿½n de la salida
 	 * El formato del carga debe ser array(<campo> => <valor>, ...)
 	 */
 	function conf__filtro(toba_ei_filtro $filtro)
@@ -33,8 +33,8 @@ class ci_control_cargo extends abm_ci
 	}
 
 	/**
-	 * Atrapa la interacción del usuario con el botón asociado
-	 * @param array $datos Estado del componente al momento de ejecutar el evento. El formato es el mismo que en la carga de la configuración
+	 * Atrapa la interacciï¿½n del usuario con el botï¿½n asociado
+	 * @param array $datos Estado del componente al momento de ejecutar el evento. El formato es el mismo que en la carga de la configuraciï¿½n
 	 */
 	function evt__filtro__filtrar($datos)
 	{
@@ -43,7 +43,7 @@ class ci_control_cargo extends abm_ci
 	}
 
 	/**
-	 * Atrapa la interacción del usuario con el botón asociado
+	 * Atrapa la interacciï¿½n del usuario con el botï¿½n asociado
 	 */
 	function evt__filtro__cancelar()
 	{

@@ -92,7 +92,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
         $datos_mapuche = toba::db('mapuche')->consultar($sql);
 
         /**
-         * TODO: VER SELECCIÓN DE DATOS DEL PERIODO ACTUAL
+         * TODO: VER SELECCIï¿½N DE DATOS DEL PERIODO ACTUAL
          */
 //       $sql="select c.codigo_siu,costo from costo_categoria cc inner join categoria c on c.id_categoria=cc.id_categoria";
 //       
@@ -174,7 +174,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
         $datos_mapuche = toba::db('mapuche')->consultar($sql);
 
         /**
-         * TODO: VER SELECCIÓN DE DATOS DEL PERIODO ACTUAL
+         * TODO: VER SELECCIï¿½N DE DATOS DEL PERIODO ACTUAL
          */
 //       $sql="select c.codigo_siu,costo from costo_categoria cc inner join categoria c on c.id_categoria=cc.id_categoria";
 //       
@@ -459,7 +459,7 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
     public function get_credito_escalafon($where) {
         /* se obtienen los dias agrupados por categoria */
         $dias_categoria = $this->get_dias_categoria($where);
-        /* se obtiene el crédito por unidad, escalafon, programa (area,subarea) */
+        /* se obtiene el crï¿½dito por unidad, escalafon, programa (area,subarea) */
         $credito_unidad = dt_mocovi_credito::get_credito_periodo_actual();
         $salida = array();
         $codigo_unidad = '';
@@ -597,7 +597,7 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
         public function get_credito_legajo($where) {
         /* se obtienen los dias agrupados por categoria */
         $dias_cargo = $this->get_dias_cargo($where);
-        /* se obtiene el crédito por unidad, escalafon, programa (area,subarea) */
+        /* se obtiene el crï¿½dito por unidad, escalafon, programa (area,subarea) */
         $param = $this->get_parametros_periodo();
         $credito_unidad = dt_mocovi_credito::get_credito_designaciones_periodo_actual($where,$param);
         $salida = array();
