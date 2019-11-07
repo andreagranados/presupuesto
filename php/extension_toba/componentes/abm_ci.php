@@ -162,10 +162,10 @@ class abm_ci extends toba_ci {
             //print_r($datos);
              if(isset($datos['documento'])) {
                         $res=$this->dep('datos')->tabla($this->nombre_tabla)->get();
-                        //print_r($res);
+                       //print_r($res);exit;
                         $nombre=$res['id_credito'].".pdf";
-                        //$destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".$nombre;
-                        $destino="/home/cristian/toba_2.7.1/proyectos/designa/www/creditos_dependencia/".$nombre;
+                       // $destino="C:/proyectos/toba_2.6.3/proyectos/designa/www/creditos_dependencia/".$nombre;
+                        $destino="/home/andrea/toba_2.7.13/proyectos/designa/www/creditos_dependencia/".$nombre;
                         if(move_uploaded_file($datos['documento']['tmp_name'], $destino)){//mueve un archivo a una nueva direccion, retorna true cuando lo hace y falso en caso de que no
                            $datos['documento']=$nombre;
                         }
