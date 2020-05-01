@@ -10,7 +10,7 @@ class ci_control_unidad extends toba_ci {
     //-----------------------------------------------------------------------------------
 
     /**
-     * Permite cambiar la configuración del cuadro previo a la generación de la salida
+     * Permite cambiar la configuraciï¿½n del cuadro previo a la generaciï¿½n de la salida
      * El formato de carga es de tipo recordset: array( array('columna' => valor, ...), ...)
      */
     function conf__cuadro(toba_ei_cuadro $cuadro) {
@@ -24,7 +24,7 @@ class ci_control_unidad extends toba_ci {
     //-----------------------------------------------------------------------------------
 
     /**
-     * Permite cambiar la configuración del formulario previo a la generación de la salida
+     * Permite cambiar la configuraciï¿½n del formulario previo a la generaciï¿½n de la salida
      * El formato del carga debe ser array(<campo> => <valor>, ...)
      */
     function conf__filtro(toba_ei_filtro $filtro) {
@@ -33,8 +33,8 @@ class ci_control_unidad extends toba_ci {
     }
 
     /**
-     * Atrapa la interacción del usuario con el botón asociado
-     * @param array $datos Estado del componente al momento de ejecutar el evento. El formato es el mismo que en la carga de la configuración
+     * Atrapa la interacciï¿½n del usuario con el botï¿½n asociado
+     * @param array $datos Estado del componente al momento de ejecutar el evento. El formato es el mismo que en la carga de la configuraciï¿½n
      */
     function evt__filtro__filtrar($datos) {
         $this->s__where = $this->dep('filtro')->get_sql_where();
@@ -42,7 +42,7 @@ class ci_control_unidad extends toba_ci {
     }
 
     /**
-     * Atrapa la interacción del usuario con el botón asociado
+     * Atrapa la interacciï¿½n del usuario con el botï¿½n asociado
      */
     function evt__filtro__cancelar() {
         
@@ -52,52 +52,52 @@ class ci_control_unidad extends toba_ci {
     //---- grafico ----------------------------------------------------------------------
     //-----------------------------------------------------------------------------------
 
-    function conf__grafico(toba_ei_grafico $grafico) {
-        if (isset($this->datos)) {
-            $datos = array();
-            $leyendas = array();
-            foreach ($this->datos as $value) {
-                $datos[] = $value['resultado'];
-                $leyendas[] = $value['codc_uacad'];
-            }
-        }
-        
-            require_once (toba_dir() . '/php/3ros/jpgraph/jpgraph.php');
-		require_once (toba_dir() . '/php/3ros/jpgraph/jpgraph_bar.php');
-
-
-
-
-		// Setup a basic graph context with some generous margins to be able
-		// to fit the legend
-		$canvas = new Graph(900, 300);
-		$canvas->SetMargin(100,140,60,40);
-
-		$canvas->title->Set('Crédito Disponible');
-		//$canvas->title->SetFont(FF_ARIAL,FS_BOLD,14);
-
-		// For contour plots it is custom to use a box style ofr the axis
-		$canvas->legend->SetPos(0.05,0.5,'right','center');
-		$canvas->SetScale('intint');
-		//$canvas->SetAxisStyle(AXSTYLE_BOXOUT);
-		//$canvas->xgrid->Show();
-		$canvas->ygrid->Show();
-                $canvas->xaxis->SetTickLabels($leyendas);
-
-
-		// A simple contour plot with default arguments (e.g. 10 isobar lines)
-		$cp = new BarPlot($datos);
-                $cp->SetColor("#B0C4DE");
-                $cp->SetFillColor("#B0C4DE");
-                $cp->SetLegend("Resultado");
-
-		$canvas->Add($cp);
-
-		// Con esta llamada informamos al gráfico cuál es el gráfico que se tiene
-		// que dibujar
-		$grafico->conf()->canvas__set($canvas);
-
-    }
+//    function conf__grafico(toba_ei_grafico $grafico) {
+//        if (isset($this->datos)) {
+//            $datos = array();
+//            $leyendas = array();
+//            foreach ($this->datos as $value) {
+//                $datos[] = $value['resultado'];
+//                $leyendas[] = $value['codc_uacad'];
+//            }
+//        }
+//        
+//            require_once (toba_dir() . '/php/3ros/jpgraph/jpgraph.php');
+//		require_once (toba_dir() . '/php/3ros/jpgraph/jpgraph_bar.php');
+//
+//
+//
+//
+//		// Setup a basic graph context with some generous margins to be able
+//		// to fit the legend
+//		$canvas = new Graph(900, 300);
+//		$canvas->SetMargin(100,140,60,40);
+//
+//		$canvas->title->Set('Crï¿½dito Disponible');
+//		//$canvas->title->SetFont(FF_ARIAL,FS_BOLD,14);
+//
+//		// For contour plots it is custom to use a box style ofr the axis
+//		$canvas->legend->SetPos(0.05,0.5,'right','center');
+//		$canvas->SetScale('intint');
+//		//$canvas->SetAxisStyle(AXSTYLE_BOXOUT);
+//		//$canvas->xgrid->Show();
+//		$canvas->ygrid->Show();
+//                $canvas->xaxis->SetTickLabels($leyendas);
+//
+//
+//		// A simple contour plot with default arguments (e.g. 10 isobar lines)
+//		$cp = new BarPlot($datos);
+//                $cp->SetColor("#B0C4DE");
+//                $cp->SetFillColor("#B0C4DE");
+//                $cp->SetLegend("Resultado");
+//
+//		$canvas->Add($cp);
+//
+//		// Con esta llamada informamos al grï¿½fico cuï¿½l es el grï¿½fico que se tiene
+//		// que dibujar
+//		$grafico->conf()->canvas__set($canvas);
+//
+//    }
 
 }
 
