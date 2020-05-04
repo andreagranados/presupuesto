@@ -596,7 +596,6 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
     
         public function get_credito_legajo($where) {
         /* se obtienen los dias agrupados por categoria */
-            //--
         $dias_cargo = $this->get_dias_cargo($where);
         /* se obtiene el cr�dito por unidad, escalafon, programa (area,subarea) */
         $param = $this->get_parametros_periodo();
