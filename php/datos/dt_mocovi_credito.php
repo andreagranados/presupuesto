@@ -41,7 +41,7 @@ $where
 
 
 
-
+//le agrego parametro
     static function get_credito_periodo_actual($param) {
         $sql = "
 select a.*,b.designaciones
