@@ -460,8 +460,9 @@ inner join dh24 on tot.nro_cargo=dh24.nro_cargo
     public function get_credito_escalafon($where) {
         /* se obtienen los dias agrupados por categoria */
         $dias_categoria = $this->get_dias_categoria($where);
+        $param = $this->get_parametros_periodo();
         /* se obtiene el cr�dito por unidad, escalafon, programa (area,subarea) */
-        $credito_unidad = dt_mocovi_credito::get_credito_periodo_actual();
+        $credito_unidad = dt_mocovi_credito::get_credito_periodo_actual($param);
         $salida = array();
         $codigo_unidad = '';
         $codigo_escalafon = '';
