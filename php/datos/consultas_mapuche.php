@@ -134,7 +134,7 @@ on dias.nro_cargo=licencia.nro_cargo $where
             $param['id_liqui_1sac'] = $fila['id_liqui_1sac'];
             $param['id_liqui_2sac'] = $fila['id_liqui_2sac'];
             $param['anio'] = $fila['anio'];
-            $param['fecha_desde'] = $fila['fecha_inicio'];
+            $param['fecha_desde'] = "'" . $fila['fecha_inicio']."'";
         }
 
         if (count($param) == 0) {
