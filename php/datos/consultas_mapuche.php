@@ -308,7 +308,8 @@ on dias.nro_cargo=licencia.nro_cargo $where
                         and a.nro_liqui<={$param['id_liqui_fin']}
                         and a.nro_liqui<>{$param['id_liqui_1sac']} --sin contar dias de aguinaldo
                         and a.nro_liqui<>{$param['id_liqui_2sac']}
-                        
+                        and a.nro_liqui<>532 --1er aguinaldo cuota 2
+                        and a.nro_liqui<>534 --1er aguinaldo cuota 3
                         group by a.nro_legaj,a.nro_cargo
                         )trabajados
 
